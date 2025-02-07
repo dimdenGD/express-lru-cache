@@ -4,6 +4,7 @@ export default function createCache(options = {}) {
     const lruCache = options.store || new LRUCache(options.lruCacheOptions);
     const keyGenerator = options.keyGenerator || (req => req.originalUrl);
     const enableCacheFn = options.enableCacheFn || (() => true);
+    const cachedHeaders = options.cachedHeaders || ['content-type'];
 
     function debug(...args) {
         if (options.debug) {
@@ -22,17 +23,21 @@ export default function createCache(options = {}) {
             debug("Cache hit for", key, cachedResponse);
             
             res.status(statusCode);
-            res.set("content-type", contentType);
+            cachedHeaders.forEach((header) => {
+                res.set(header, cachedResponse[1][header]);
+            });
             res.send(body);
+
 
         } else {
             let originalEnd = res.end;
             function sendResponse(body) {
-                const response = [body, res.get("content-type"), res.statusCode];
+                const response = [body, cachedHeaders.map(header => [header, res.get(header)]), res.statusCode];
                 lruCache.set(key, response);
                 debug("Saved response to cache", key, response);
                 originalEnd.apply(res, arguments);
             }
+
 
             res.end = sendResponse;
 
