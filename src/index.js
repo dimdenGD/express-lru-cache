@@ -17,6 +17,7 @@ export default function createCache(options = {}) {
         const key = keyGenerator(req, res, lruCache);
         const enableCache = enableCacheFn(req, res, lruCache);
         const cachedResponse = lruCache.get(key);
+        debug("Cache key", key, enableCache);
 
         if (enableCache && cachedResponse) {
             const [body, headers, statusCode] = cachedResponse;
