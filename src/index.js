@@ -19,12 +19,12 @@ export default function createCache(options = {}) {
         const cachedResponse = lruCache.get(key);
 
         if (enableCache && cachedResponse) {
-            const [body, contentType, statusCode] = cachedResponse;
+            const [body, headers, statusCode] = cachedResponse;
             debug("Cache hit for", key, cachedResponse);
             
             res.status(statusCode);
-            cachedHeaders.forEach((header) => {
-                res.set(header, cachedResponse[1][header]);
+            headers.forEach((header) => {
+                res.set(header[0], header[1]);
             });
             res.send(body);
 
