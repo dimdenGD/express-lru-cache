@@ -1,6 +1,6 @@
 import { LRUCache } from "lru-cache";
 
-export function createCache(options = {}) {
+export default function createCache(options = {}) {
     const lruCache = options.store || new LRUCache(options.lruCacheOptions);
     const keyGenerator = options.keyGenerator || (req => req.originalUrl);
     const enableCacheFn = options.enableCacheFn || (() => true);
