@@ -12,9 +12,9 @@ export default function createCache(options = {}) {
 
         if (enableCache && cachedResponse) {
             const [body, contentType, statusCode] = cachedResponse;
-            res.send(body);
-            res.set("content-type", contentType);
             res.status(statusCode);
+            res.set("content-type", contentType);
+            res.send(body);
 
         } else {
             let originalEnd = res.end;
