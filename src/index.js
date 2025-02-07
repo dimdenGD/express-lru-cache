@@ -27,9 +27,10 @@ export default function createCache(options = {}) {
             headers.forEach((header) => {
                 res.set(header[0], header[1]);
             });
+            if(options.onCacheHit) {
+                options.onCacheHit(req, res, lruCache, cachedResponse);
+            }
             res.send(body);
-
-
         } else {
             let originalEnd = res.end;
             function sendResponse(body) {
