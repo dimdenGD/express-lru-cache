@@ -1,0 +1,29 @@
+{
+  "name": "express-lru-cache",
+  "version": "1.0.0",
+  "description": "Express middleware to cache responses using LRU cache.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dimdenGD/express-lru-cache.git"
+  },
+  "keywords": [
+    "express",
+    "middleware",
+    "lru",
+    "cache",
+    "lru"
+  ],
+  "author": "dimden.dev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dimdenGD/express-lru-cache/issues"
+  },
+  "homepage": "https://github.com/dimdenGD/express-lru-cache#readme",
+  "dependencies": {
+    "lru-cache": "^11.0.2"
+  }
+}
