@@ -27,8 +27,8 @@ export default function createCache(options = {}) {
 
         } else {
             let originalEnd = res.end;
-            function sendResponse() {
-                const response = [res.body, res.get("content-type"), res.statusCode];
+            function sendResponse(body) {
+                const response = [body, res.get("content-type"), res.statusCode];
                 lruCache.set(key, response);
                 debug("Saved response to cache", key, response);
                 originalEnd.apply(res, arguments);
