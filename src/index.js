@@ -5,6 +5,13 @@ export default function createCache(options = {}) {
     const keyGenerator = options.keyGenerator || (req => req.originalUrl);
     const enableCacheFn = options.enableCacheFn || (() => true);
 
+    function debug(...args) {
+        if (options.debug) {
+            console.log(...args);
+        }
+    }
+
+
     return (req, res, next) => {
         const key = keyGenerator(req, res, lruCache);
         const enableCache = enableCacheFn(req, res, lruCache);
@@ -12,6 +19,8 @@ export default function createCache(options = {}) {
 
         if (enableCache && cachedResponse) {
             const [body, contentType, statusCode] = cachedResponse;
+            debug("Cache hit for", key, cachedResponse);
+            
             res.status(statusCode);
             res.set("content-type", contentType);
             res.send(body);
@@ -19,9 +28,10 @@ export default function createCache(options = {}) {
         } else {
             let originalEnd = res.end;
             function sendResponse() {
-                lruCache.set(key, [res.body, res.get("content-type"), res.statusCode]);
+                const response = [res.body, res.get("content-type"), res.statusCode];
+                lruCache.set(key, response);
+                debug("Saved response to cache", key, response);
                 originalEnd.apply(res, arguments);
-
             }
 
             res.end = sendResponse;
