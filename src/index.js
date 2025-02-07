@@ -11,12 +11,17 @@ export default function createCache(options = {}) {
         const cachedResponse = lruCache.get(key);
 
         if (enableCache && cachedResponse) {
-            res.send(cachedResponse);
+            const [body, contentType, statusCode] = cachedResponse;
+            res.send(body);
+            res.set("content-type", contentType);
+            res.status(statusCode);
+
         } else {
             function sendResponse() {
-                lruCache.set(key, res.body);
+                lruCache.set(key, [res.body, res.get("content-type"), res.statusCode]);
                 res.end(res.body);
             }
+
 
             res.end = sendResponse;
 
