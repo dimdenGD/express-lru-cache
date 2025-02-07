@@ -17,11 +17,12 @@ export default function createCache(options = {}) {
             res.status(statusCode);
 
         } else {
+            let originalEnd = res.end;
             function sendResponse() {
                 lruCache.set(key, [res.body, res.get("content-type"), res.statusCode]);
-                res.end(res.body);
-            }
+                originalEnd.apply(res, arguments);
 
+            }
 
             res.end = sendResponse;
 
